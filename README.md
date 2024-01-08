@@ -1,4 +1,4 @@
-# Automação CFL
+# Controle de Ativos
 Projeto pensado para atender as necessidades do time de automação da Usina Coruripe unidade Campo Florido<br>
 Aplicação conta com cadastros de: Aplicação, Equipamento, Empresa e Fabricante<br>
 A ideia é realizar e controlar lançamentos de Calibrações e Manutenções dos equipamentos<br><br>
