@@ -7,7 +7,7 @@ A ideia é realizar e controlar lançamentos de Calibrações e Manutenções do
 Criado através do <a href="https://start.spring.io" target="_blank" rel="noopener noreferrer">Spring Initializr</a><br>
 Compilado: Java 17<br>
 Versão Spring: 3.2.1<br>
-Versão Spring Security: 6
+Versão Spring Security: 6<br>
 Projeto: Maven<br>
 Modo de empacotamento: WAR<br><br>
 
