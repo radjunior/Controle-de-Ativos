@@ -4,7 +4,7 @@ Aplicação conta com cadastros de: Aplicação, Equipamento, Empresa e Fabrican
 A ideia é realizar e controlar lançamentos de Calibrações e Manutenções dos equipamentos<br><br>
 
 # Infra
-Criado através do <a href="https://start.spring.io" target="_blank" rel="noopener noreferrer"></a><br>
+Criado através do <a href="https://start.spring.io" target="_blank" rel="noopener noreferrer">Spring Initializr</a><br>
 Compilado: Java 17<br>
 Versão Spring: 3.2.1<br>
 Versão Spring Security: 6
