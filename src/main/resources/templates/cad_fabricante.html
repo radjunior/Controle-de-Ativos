@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:replace="~{./fragments :: cabecalho}"></th:block>
+<head>
+    <title>Cadastro de Fabricantes</title>
+</head>
+
+<body>
+    <nav th:replace="~{./fragments :: navbar}"></nav>
+    <div th:replace="~{./fragments :: offcanvas}"></div>
+    <th:block th:replace="~{./fragments :: msgReturn}"></th:block>
+    
+    <h1 class="text-center mb-4 mt-4">Cadastro de Fabricantes</h1>
+	
+    <main class="form-control mt-4 m10-w90">
+        <form class="row g-3 needs-validation" th:action="@{/cad/fabricante/salvar}" method="post" novalidate>
+            <input type="hidden" name="id">
+            <div class="col-md-6">
+                <label for="validationCustom01" class="form-label">Nome</label>
+                <input type="text" class="form-control" name="nome" id="validationCustom01" required>
+                <div class="valid-feedback">Ok!</div>
+                <div class="invalid-feedback">Campo Obrigatório</div>
+            </div>
+            <div class="col-md-6">
+                <label for="validationCustom02" class="form-label">Modelo</label>	
+                <input type="text" class="form-control" name="modelo" id="validationCustom02" required>
+                <div class="valid-feedback">Ok!</div>
+                <div class="invalid-feedback">Campo Obrigatório</div>
+            </div>
+            <div class="col-12">
+                <button class="btn btn-outline-success" type="submit">Salvar</button>
+            </div>
+        </form>
+    </main>
+    
+    <section class="form-control m10-w90 tabela">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Nome</th>
+                    <th>Modelo</th>
+                    <th style="width: 100px;">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="fab: ${fabricantes}">
+                    <td th:text="${fab.id}"></td>
+                    <td th:text="${fab.nome}"></td>
+                    <td th:text="${fab.modelo}"></td>
+                    <td style="display: flex;gap: 10px;">
+                        <button class="btn btn-info" onclick="editarFabricante(this)"><i class="bi bi-gear"></i></button>
+                        <form th:action="@{/cad/fabricante/deletar}" method="post">
+                            <input type="hidden" name="id" th:value="${fab.id}">
+                            <button type="submit" class="btn btn-danger"><i class="bi bi-trash3"></i></button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+    
+    <th:block th:replace="~{./fragments :: scriptJs}"></th:block>
+	<script type="text/javascript">
+		function editarFabricante(btn) {
+			var row = btn.parentNode.parentNode;
+			
+			var id = row.cells[0].textContent;
+			var nome = row.cells[1].textContent;
+			var modelo = row.cells[2].textContent;
+			
+			document.querySelector('input[name="id"]').value = id;
+			document.querySelector('input[name="nome"]').value = nome;
+			document.querySelector('input[name="modelo"]').value = modelo;
+		}
+	</script>
+</body>
+</html>

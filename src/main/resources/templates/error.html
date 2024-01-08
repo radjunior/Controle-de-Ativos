@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:replace="~{./fragments :: cabecalho}"></th:block>
+
+<head>
+    <title>Problema encontrado</title>
+</head>
+
+<body>
+    <h1 class="text-center mb-4">Ops, algo de errado não está certo!</h1>
+	
+    <main class="form-control mt-4 m10-w90" style="text-align: center;">
+    	<h4>Pedimos desculpas pelo inconveniente!</h4>
+    	<p>Tente novamente mais tarde. Se o problema persistir, procure o departamento da TI.</p>
+    	<a href="javascript:history.back();" class="btn btn-outline-secondary">Voltar</a>
+    </main>
+</body>
+</html>

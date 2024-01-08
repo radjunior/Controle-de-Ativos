@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:replace="~{./fragments :: cabecalho}"></th:block>
+<head>
+    <title>Dashboard</title>
+    <style type="text/css">
+    	.container_cards {
+    		display: flex;
+		    gap: 10px;
+		    justify-content: center;
+		    flex-wrap: wrap;
+    	}
+    </style>
+</head>
+
+<body>
+    <nav th:replace="~{./fragments :: navbar}"></nav>
+    <div th:replace="~{./fragments :: offcanvas}"></div>
+    <h2 class="text-center mb-4 mt-4">Controle de Ativos Automação CFL</h2>
+</body>
+</html>

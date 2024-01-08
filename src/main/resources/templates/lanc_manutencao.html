@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:replace="~{./fragments :: cabecalho}"></th:block>
+<head>
+    <title>Manutenção</title>
+</head>
+
+<body>
+    <nav th:replace="~{./fragments :: navbar}"></nav>
+    <div th:replace="~{./fragments :: offcanvas}"></div>
+    <th:block th:replace="~{./fragments :: msgReturn}"></th:block>
+    <h1 class="text-center mb-4">Lançamento de Manutenção</h1>
+    
+    <!-- Formulário Principal -->
+    <main class="form-control" style="margin: 10px;width: 90% !important;">
+        <form class="row g-3 needs-validation" th:action="@{/nova/manutencao/salvar}" method="post" novalidate>
+            <input type="hidden" name="id">
+            <div class="col-md-4">
+                <label for="validationCustom01" class="form-label">Data Envio</label>
+                <input type="date" class="form-control" name="dataEnvio" id="validationCustom01" required>
+                <div class="valid-feedback">Ok!</div>
+                <div class="invalid-feedback">Campo Obrigatório</div>
+            </div>
+            <div class="col-md-4">
+                <label for="validationCustom02" class="form-label">Data Retorno</label>
+                <input type="date" class="form-control" name="dataRetorno" id="validationCustom02" required>
+                <div class="valid-feedback">Ok!</div>
+                <div class="invalid-feedback">Campo Obrigatório</div>
+            </div>
+            <div class="col-md-4">
+                <label for="validationCustom03" class="form-label">Tipo</label>
+                <select class="form-select" name="tipo" aria-label="Default select example" id="validationCustom03" required>
+					<option value="EXTERNA">Externa</option>
+					<option value="INTERNA">Interna</option>
+				</select>
+            </div>
+            <div class="col-12">
+                <button class="btn btn-outline-success" type="submit">Salvar</button>
+            </div>
+        </form>
+    </main>
+    
+    <!-- Tabela Principal -->
+    <section class="form-control m10-w90 tabela">
+    	<div class="table-responsive">
+	        <table class="table table-hover">
+	            <thead>
+	                <tr>
+	                    <th>ID</th>
+	                    <th>Data do envio</th>
+	                    <th>Data de retorno</th>
+	                    <th>Tipo</th>
+	                    <th>Equipamentos</th>
+	                    <th>Proposta</th>
+	                    <th>RC</th>
+	                    <th style="width: 100px;">Ações</th>
+	                </tr>
+	            </thead>
+	            <tbody>
+	                <tr th:each="var: ${manutencoes}">
+	                    <td th:text="${var.id}"></td>
+	                    <td th:text="${var.dataEnvio}"></td>
+	                    <td th:text="${var.dataRetorno}"></td>
+	                    <td th:text="${var.tipo}"></td>
+	                    <td><button class="btn btn-outline-secondary" type="button" onclick="insertIdManutencaoOpenModalAddEquipamentos(this)">Equipamentos</button></td>
+	                    <td><button class="btn btn-outline-secondary" type="button" onclick="insertIdManutencaoOpenModalProposta(this)">Proposta</button></td>
+	                    <td><button class="btn btn-outline-secondary" type="button" onclick="insertIdManutencaoOpenModalRequisicaoCompra(this)">RC</button></td>
+	                    <td style="display: flex;gap: 10px;">
+	                        <button class="btn btn-info" onclick="editarManutencao(this)"><i class="bi bi-gear"></i></button>
+	                        <form th:action="@{/nova/manutencao/deletar}" method="post">
+	                            <input type="hidden" name="id" th:value="${var.id}">
+	                            <button type="submit" class="btn btn-danger"><i class="bi bi-trash3"></i></button>
+	                        </form>
+	                    </td>
+	                </tr>
+	            </tbody>
+	        </table>
+        </div>
+    </section>
+    
+    <!-- Modal Adicionar Equipamentos -->
+    <div class="modal fade" id="modalAddEquipamentos" tabindex="-1">
+		<div class="modal-dialog modal-xl">
+			<div class="modal-content" style="color: #2b3035">
+				<div class="modal-header">
+					<h1 class="modal-title fs-5" id="modalAddEquipamentosLabel"></h1>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body" style="background-color: #f0f0f0">
+					<main class="form-control">
+						<div class="container row g-3">
+				            <div class="col-md-4">
+				                <label for="validationCustom04" class="form-label">Número de série</label>
+				                <input type="text" class="form-control" name="numeroSerieEquipamentoModal" id="validationCustom04" required>
+				            </div>
+				            <div class="col-md-8" style="padding-top: 32px">
+				                <button class="btn btn-outline-success" type="button" onclick="buscarEquipamento()">Consultar Equipamentos</button>
+				            </div>
+			            </div>
+			            <div class="table-responsive">
+				            <table class="table table-hover">
+					            <thead>
+					                <tr>
+					                    <th>Número de Série</th>
+					                    <th>Código</th>
+					                    <th>Nome Fabricante</th>
+					                    <th>Modelo Fabricante</th>
+					                    <th>Situações</th>
+					                    <th style="width: 100px;">Ações</th>
+					                </tr>
+					            </thead>
+					            <tbody id="tEquipamentos"></tbody>
+					        </table>
+				        </div>
+				    </main>
+				    <section class="form-control tabel mt-5">
+				        <div class="modal-header">
+							<h1 class="modal-title fs-5">Equipamentos Relacionados</h1>
+						</div>
+				        <div class="table-responsive">
+					        <table class="table table-hover">
+					            <thead>
+					                <tr>
+					                    <th>#</th>
+					                    <th>Número de Série</th>
+					                    <th>Código</th>
+					                    <th>Nome Fabricante</th>
+					                    <th>Modelo Fabricante</th>
+					                    <th>Situações</th>
+					                    <th style="width: 100px;">Ações</th>
+					                </tr>
+					            </thead>
+					            <tbody id="tEquipamentosAssociados"></tbody>
+					        </table>
+				        </div>
+				    </section>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Sair</button>
+				</div>
+			</div>
+		</div>
+	</div>
+    
+    <!-- Modal RC -->
+	<div class="modal fade" id="modalRc" tabindex="-1">
+		<div class="modal-dialog modal-xl">
+			<div class="modal-content" style="color: #2b3035">
+				<div class="modal-header">
+					<h1 class="modal-title fs-5" id="modalRcLabel"></h1>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body" style="background-color: #f0f0f0">
+					<main class="form-control">
+						<div class="container row g-3">
+				            <div class="col-md-4">
+				                <label for="validationCustom04" class="form-label">Requisição de Compra</label>
+				                <input type="text" class="form-control" name="requisicaoCompra" id="validationCustom04" required>
+				            </div>
+				            <div class="col-md-4">
+				                <label for="validationCustom05" class="form-label">Valor (R$)</label>
+				                <input type="text" class="form-control" name="valorTotal" id="validationCustom05" required>
+				            </div>
+				            <div class="col-md-4" style="margin-top: 50px">
+								<div class="form-check form-switch">
+									<input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckDefault" name="sitMemorizacao">
+									<label class="form-check-label" for="flexSwitchCheckDefault">Memorização</label>
+								</div>
+							</div>
+				            <div class="col-12">
+				                <button class="btn btn-outline-success" type="button" onclick="salvarRC()">Salvar item da Requisição de Compra</button>
+				            </div>
+			            </div>
+				    </main>
+				    <section class="form-control tabela mt-5">
+				        <div class="table-responsive">
+					        <table class="table table-hover">
+					            <thead>
+					                <tr>
+					                    <th>Requisição de Compra</th>
+					                    <th>Memorização</th>
+					                    <th>Valor Total</th>
+					                    <th style="width: 100px;">Ações</th>
+					                </tr>
+					            </thead>
+					            <tbody id="tRCTbody"></tbody>
+					        </table>
+				        </div>
+				    </section>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Sair</button>
+				</div>
+			</div>
+		</div>
+	</div>
+    
+    <!-- Modal Proposta -->
+	<div class="modal fade" id="modalProposta" tabindex="-1">
+		<div class="modal-dialog modal-xl">
+			<div class="modal-content" style="color: #2b3035">
+				<div class="modal-header">
+					<h1 class="modal-title fs-5" id="modalPropostaLabel"></h1>
+					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+				</div>
+				<div class="modal-body" style="background-color: #f0f0f0">
+					<main class="form-control" style="padding-bottom: 20px;">
+						<div class="container row g-3">
+				            <input type="hidden" name="id">
+				            <div class="col-md-12">
+				                <label for="validationCustom07" class="form-label">Empresa</label>
+				                <select class="form-select" name="idEmpresa" aria-label="Default select example" id="validationCustom07" required>
+									<option th:each="var : ${empresas}" th:value="${var.id}" th:text="${var.nome}"></option>
+								</select>
+				            </div>
+				            <div class="col-md-2">
+				                <label for="validationCustom08" class="form-label">Item</label>
+				                <input type="number" class="form-control" name="item" id="validationCustom08" required>
+				                <div class="valid-feedback">Ok!</div>
+				                <div class="invalid-feedback">Campo Obrigatório</div>
+				            </div>
+				            <div class="col-md-8">
+				                <label for="validationCustom09" class="form-label">Descrição</label>
+				                <input type="text" class="form-control" name="descricao" id="validationCustom09" required>
+				                <div class="valid-feedback">Ok!</div>
+				                <div class="invalid-feedback">Campo Obrigatório</div>
+				            </div>
+				            <div class="col-md-2">
+				                <label for="validationCustom10" class="form-label">Valor (R$)</label>
+				                <input type="text" class="form-control" name="valor" id="validationCustom10" required>
+				                <div class="valid-feedback">Ok!</div>
+				                <div class="invalid-feedback">Campo Obrigatório</div>
+				            </div>
+				            <div class="col-12">
+			                	<button class="btn btn-outline-success" type="button" onclick="salvarProposta()">Salvar Item da Proposta</button>
+				            </div>
+			            </div>
+				    </main>
+				    <section class="form-control mt-5" style="height: 40vh">
+				    	<div class="modal-header" style="padding: 10px">
+							<h1 class="modal-title fs-5">Equipamentos e suas propostas</h1>
+							<h2 class="modal-title fs-6" id="labelValorTotal">Total R$ 0,00</h2>
+						</div>
+				        <div class="table-responsive">
+					        <table class="table table-hover">
+					            <thead>
+					                <tr>
+					                    <th>#</th>
+					                    <th>Id</th>
+					                    <th>Equ.NumeroSerie</th>
+					                    <th>Equ.Codigo</th>
+					                    <th>Empresa</th>
+					                    <th>Item</th>
+					                    <th>Descrição</th>
+					                    <th>Valor</th>
+					                    <th>Id Proposta</th>
+					                    <th style="width: 100px;">Ações</th>
+					                </tr>
+					            </thead>
+					            <tbody id="tPropostasManutencaoTbody"></tbody>
+					        </table>
+				        </div>
+				    </section>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Sair</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<script type="text/javascript">
+		function editarManutencao(btn) {
+			var row = btn.parentNode.parentNode;
+	
+			var dataEnvio 	= row.cells[1].textContent;
+			var dataRetorno = row.cells[2].textContent;
+			var tipo		= row.cells[3].textContent;
+			
+			document.querySelector('input[name="dataEnvio"]').value 	= dataEnvio;
+			document.querySelector('input[name="dataRetorno"]').value 	= dataRetorno;
+			document.querySelector('select[name="tipo"]').value 		= tipo;
+		}
+	</script>
+	<script type="text/javascript" th:src="@{/script/controle_equipamentos.js}"></script>
+	<script type="text/javascript" th:src="@{/script/controle_propostas.js}"></script>
+    <script type="text/javascript" th:src="@{/script/controle_rc.js}"></script>
+    <th:block th:replace="~{./fragments :: scriptJs}"></th:block>
+</body>
+</html>

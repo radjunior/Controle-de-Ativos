@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:replace="~{./fragments :: cabecalho}"></th:block>
+<head>
+    <title>Cadastro de Aplicações</title>
+</head>
+
+<body>
+    <nav th:replace="~{./fragments :: navbar}"></nav>
+    <div th:replace="~{./fragments :: offcanvas}"></div>
+    <th:block th:replace="~{./fragments :: msgReturn}"></th:block>
+    
+    <h1 class="text-center mb-4 mt-4">Cadastro de Aplicações</h1>
+    
+    <main class="form-control" style="margin: 10px;width: 90% !important;">
+        <form class="row g-3 needs-validation" th:action="@{/cad/aplicacao/salvar}" method="post" novalidate>
+            <div class="col-md-6">
+                <label for="validationCustom01" class="form-label">TAG</label>
+                <input type="text" class="form-control" name="tag" id="validationCustom01" required>
+                <div class="valid-feedback">Ok!</div>
+                <div class="invalid-feedback">Campo Obrigatório</div>
+            </div>
+            <div class="col-md-6">
+                <label for="validationCustom02" class="form-label">Descrição</label>
+                <input type="text" class="form-control" name="descricao" id="validationCustom02" required>
+                <div class="valid-feedback">Ok!</div>
+                <div class="invalid-feedback">Campo Obrigatório</div>
+            </div>
+            <div class="col-md-6">
+                <label for="validationCustom03" class="form-label">Equipamentos (Número de Série - Código)</label>
+                <select class="form-select" name="numSerieEquipamento" aria-label="Default select example" id="validationCustom03" required>
+					<option th:each="var : ${equipamentos}" th:value="${var.numeroSerie}" th:text="${var.numeroSerie}+ ' - ' +${var.codigo}"></option>
+				</select>
+            </div>
+            <div class="col-12">
+                <button class="btn btn-outline-success" type="submit">Salvar</button>
+            </div>
+        </form>
+    </main>
+    
+    <section class="form-control m10-w90 tabela">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>TAG</th>
+                    <th>Descrição</th>
+                    <th>Equipamento</th>
+                    <th>Fabricante</th>
+                    <th style="width: 100px;">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="var: ${aplicacoes}">
+                    <td th:text="${var.tag}"></td>
+                    <td th:text="${var.descricao}"></td>
+                    <td th:text="'[' + ${var.equipamento.numeroSerie} + '] - ' + ${var.equipamento.codigo}"></td>
+                    <td th:text="${var.equipamento.fabricante.nome} + ' - ' + ${var.equipamento.fabricante.modelo}"></td>
+                    <td style="display:flex;gap:10px;">
+                        <button class="btn btn-info" onclick="editarAplicacao(this)"><i class="bi bi-gear"></i></button>
+                        <form th:action="@{/cad/aplicacao/deletar}" method="post">
+                            <input type="hidden" name="tag" th:value="${var.tag}">
+                            <button type="submit" class="btn btn-danger"><i class="bi bi-trash3"></i></button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+    
+    <th:block th:replace="~{./fragments :: scriptJs}"></th:block>
+	<script type="text/javascript">
+		function editarAplicacao(btn) {
+			var row = btn.parentNode.parentNode;
+			
+			var tag = row.cells[0].textContent;
+			var descricao = row.cells[1].textContent;
+			var numSerieEquipamento = row.cells[2].textContent;
+			numSerieEquipamento = numSerieEquipamento.split("-")[0].replace("[","").replace("]","").trim();
+
+			document.querySelector("input[name='tag']").value = tag;
+			document.querySelector("input[name='descricao']").value = descricao;
+			document.querySelector("select[name='numSerieEquipamento']").value = numSerieEquipamento;
+		}
+	</script>
+</body>
+</html>

@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:replace="~{./fragments :: cabecalho}"></th:block>
+<head>
+    <title>Cadastro de Equipamentos</title>
+</head>
+
+<body>
+    <nav th:replace="~{./fragments :: navbar}"></nav>
+    <div th:replace="~{./fragments :: offcanvas}"></div>
+    <th:block th:replace="~{./fragments :: msgReturn}"></th:block>
+    <h1 class="text-center mb-4 mt-4">Cadastro de Equipamentos</h1>
+    
+    <main class="form-control" style="margin: 10px;width: 90% !important;">
+        <form class="row g-3 needs-validation" th:action="@{/cad/equipamento/salvar}" method="post" novalidate>
+            <div class="col-md-6">
+                <label for="validationCustom01" class="form-label">Número de Série</label>
+                <input type="text" class="form-control" name="numeroSerie" id="validationCustom01" required>
+                <div class="valid-feedback">Ok!</div>
+                <div class="invalid-feedback">Campo Obrigatório</div>
+            </div>
+            <div class="col-md-6">
+                <label for="validationCustom02" class="form-label">Código</label>
+                <input type="text" class="form-control" name="codigo" id="validationCustom02" required>
+                <div class="valid-feedback">Ok!</div>
+                <div class="invalid-feedback">Campo Obrigatório</div>
+            </div>
+            <div class="col-md-6">
+                <label for="validationCustom03" class="form-label">Fabricante (Nome - Modelo)</label>
+                <select class="form-select" name="idFabricante" aria-label="Default select example" id="validationCustom03" required>
+					<option th:each="var : ${fabricantes}" th:value="${var.id}" th:text="${var.nome} + ' - ' + ${var.modelo}"></option>
+				</select>
+            </div>
+            <div class="col-md-6">
+                <label for="validationCustom04" class="form-label">Situação</label>
+                <select class="form-select" name="situacao" aria-label="Default select example" id="validationCustom04" required>
+					<option value="OPERANDO">Operando</option>
+					<option value="RESERVA">Reserva</option>
+					<option value="DANIFICADO">Danificado</option>
+				</select>
+            </div>
+            <div class="col-12">
+                <button class="btn btn-outline-success" type="submit">Salvar</button>
+            </div>
+        </form>
+    </main>
+    
+    <section class="form-control m10-w90 tabela">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Número de Série</th>
+                    <th>Código</th>
+                    <th>Fabricante</th>
+                    <th>Situação</th>
+                    <th style="width: 100px;">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="var: ${equipamentos}">
+                    <td th:text="${var.numeroSerie}"></td>
+                    <td th:text="${var.codigo}"></td>
+                    <td th:text="'[' + ${var.fabricante.id} + '] - ' + ${var.fabricante.nome}"></td>
+                    <td th:text="${var.situacao}"></td>
+                    <td style="display:flex;gap:10px;">
+                        <button class="btn btn-info" onclick="editarEquipamento(this)"><i class="bi bi-gear"></i></button>
+                        <form th:action="@{/cad/equipamento/deletar}" method="post">
+                            <input type="hidden" name="numeroSerie" th:value="${var.numeroSerie}">
+                            <button type="submit" class="btn btn-danger"><i class="bi bi-trash3"></i></button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+    
+    <th:block th:replace="~{./fragments :: scriptJs}"></th:block>
+	<script type="text/javascript">
+		function editarEquipamento(btn) {
+			var row = btn.parentNode.parentNode;
+			
+			var numeroSerie = row.cells[0].textContent;
+			var codigo = row.cells[1].textContent;
+			var idFabricante = row.cells[2].textContent;
+			idFabricante = idFabricante.split("-")[0].replace("[","").replace("]","").trim();
+			var situacao = row.cells[3].textContent;
+			
+			document.querySelector('input[name="numeroSerie"]').value = numeroSerie;
+			document.querySelector('input[name="codigo"]').value = codigo;
+			document.querySelector('select[name="idFabricante"]').value = idFabricante;
+			document.querySelector('select[name="situacao"]').value = situacao;
+		}
+	</script>
+</body>
+</html>

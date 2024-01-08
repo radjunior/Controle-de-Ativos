@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:replace="~{./fragments :: cabecalho}"></th:block>
+
+<head>
+    <title>Problema encontrado</title>
+</head>
+
+<body>
+	<nav th:replace="~{./fragments :: navbar}"></nav>
+    <div th:replace="~{./fragments :: offcanvas}"></div>
+    <h1 class="text-center mb-4">Seu acesso é insuficiente!</h1>
+	
+    <main class="form-control mt-4 m10-w90" style="text-align: center;">
+    	<h4>Há um problema com sua tentativa.</h4>
+    	<p>Se esse problema não condizer com a realidade, entre em contato com o departamento de TI.</p>
+    	<a href="javascript:history.back();" class="btn btn-outline-secondary">Voltar</a>
+    </main>
+</body>
+</html>

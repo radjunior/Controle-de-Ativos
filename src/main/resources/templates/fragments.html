@@ -1,0 +1,168 @@
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:fragment="cabecalho">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
+	<link rel="shortcut icon" th:href="@{/favicon.png}" type="image/x-icon">
+	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+	<script type="text/javascript" th:src="@{/script/imports.js}"></script>
+	<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+	<script src="https://fastly.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+	<style>
+	body {
+		margin: auto;
+		background-color: #2B3035 !important;
+		color: #f5f5f5 !important;
+		display: flex;
+		flex-direction: column;
+		align-content: center;
+		align-items: center;
+	}
+	.return {
+		font-weight: 600;
+	}
+	.success {
+		color: var(--bs-success);
+	}
+	.error {
+		color: var(--bs-danger);
+	}
+	.warnning {
+		color: var(--bs-warning);
+	}
+	.m10-w90 {
+		margin: 10px;
+		width: 90% !important;
+	}
+	.tabela {
+		height: 50vh;
+	    overflow: auto;
+	}
+	.positionAbs {
+		position: absolute;
+		right: 0;
+	}
+	.toast {
+	    position: absolute;
+    	right: 0;
+	}
+	.toast-header {
+		gap: 10px
+	}
+	</style>
+</head>
+
+<script type="text/javascript" th:fragment="scriptJs">
+	document.addEventListener("DOMContentLoaded", (alertTimeoutalertTimeout) => {
+		const forms = document.querySelectorAll('.needs-validation')
+           Array.from(forms).forEach(form => {
+               form.addEventListener('submit', event => {
+                   if (!form.checkValidity()) {
+                       event.preventDefault()
+                       event.stopPropagation()
+                   }
+                   form.classList.add('was-validated')
+               }, false)
+           })
+    	const toastContent = document.querySelector('.toast');
+		const toast = new bootstrap.Toast(toastContent);
+		toast.show();
+	});
+</script>
+
+<div th:fragment="msgReturn">
+	<div th:if="${success != null}">
+		<div class="toast" role="alert" aria-live="assertive"aria-atomic="true" style="background-color: #2d8655">
+			<div class="toast-header">
+				<i class="bi bi-exclamation-octagon"></i>
+				<strong class="me-auto">Mensagens</strong>
+				<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+			</div>
+			<div class="toast-body" th:text="${success}"></div>
+		</div>
+	</div>
+	<div th:if="${error != null}">
+		<div class="toast" role="alert" aria-live="assertive"aria-atomic="true" style="background-color: #b4353e">
+			<div class="toast-header">
+				<i class="bi bi-exclamation-octagon"></i>
+				<strong class="me-auto">Mensagens</strong>
+				<button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+			</div>
+			<div class="toast-body" th:text="${error}"></div>
+		</div>
+	</div>
+</div>
+
+<nav th:fragment="navbar" class="navbar navbar-expand-lg bg-body-tertiary w-100">
+	<div class="container-fluid">
+		<a class="navbar-brand" href="#">Automação Web</a>
+		<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+		<div class="collapse navbar-collapse" id="navbarSupportedContent">
+			<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+				<li class="nav-item">
+					<a class="nav-link" th:href="@{/dashboard}">Dashboard</a>
+				</li>
+				<li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">Nova </a>
+					<ul class="dropdown-menu">
+						<li><a class="dropdown-item" th:href="@{/nova/calibracao/consultar}">Calibração</a></li>
+						<li><hr class="dropdown-divider"></li>
+						<li><a class="dropdown-item" th:href="@{/nova/manutencao/consultar}">Manutenção</a></li>
+					</ul>
+				</li>
+				<li class="nav-item dropdown">
+					<a class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false">Cadastro </a>
+					<ul class="dropdown-menu">
+						<li><a class="dropdown-item" th:href="@{/cad/equipamento/consultar}">Equipamento</a></li>
+						<li><a class="dropdown-item" th:href="@{/cad/aplicacao/consultar}">Aplicação</a></li>
+						<li><hr class="dropdown-divider"></li>
+						<li><a class="dropdown-item" th:href="@{/cad/empresa/consultar}">Empresa</a></li>
+						<li><a class="dropdown-item" th:href="@{/cad/fabricante/consultar}">Fabricante</a></li>
+						<li><hr class="dropdown-divider"></li>
+						<li><a class="dropdown-item" th:href="@{/cad/usuario/consultar}">Usuário</a></li>
+					</ul>
+				</li>
+			</ul>
+			<button type="button" class="btn btn-outline-secondary position-relative" data-bs-toggle="offcanvas" data-bs-target="#offcanvasRight" aria-controls="offcanvasRight">
+		  		Notificações  <span class="badge text-bg-danger" th:text="${countRcsMemorizadas}"></span>
+			</button>&nbsp;&nbsp;
+			<form class="d-flex" th:action="@{/logout}" method="post">
+				<button class="btn btn-outline-secondary" type="submit">
+					<i class="bi bi-box-arrow-up-right"></i>
+				</button>
+			</form>			
+		</div>
+	</div>
+</nav>
+
+<div th:fragment="offcanvas" class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+	<div class="offcanvas-header">
+		<h5 class="offcanvas-title" id="offcanvasRightLabel">Notificações</h5>
+		<button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+	</div>
+	<div class="offcanvas-body" style="display:flex;align-items:center;justify-content:flex-start;flex-direction:column;gap:20px;">
+		<div class="card" style="width: 20rem;">
+			<div class="card-header">Requisições de Compras Memorizadas</div>
+			<ul class="list-group list-group-flush" th:each="rc: ${rcsMemorizadas}">
+				<li class="list-group-item" th:text="'RC: ' + ${rc.reqCompra} + ' - R$ ' + ${rc.valorTotal}"></li>
+			</ul>
+		</div>
+		<div class="card" style="width: 20rem;">
+			<div class="card-header">Novidades</div>
+			<ul class="list-group list-group-flush">
+				<li class="list-group-item">Spring Security implantado! (Beta)</li>
+				<li class="list-group-item">Tomcat Session implementado!</li>
+				<li class="list-group-item">Unificação das classes Record concluída!</li>
+				<li class="list-group-item">Controle de Perfis em homologação!</li>
+			</ul>
+		</div>
+	</div>
+</div>
+

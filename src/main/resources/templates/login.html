@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<th:block th:replace="~{./fragments :: cabecalho}"></th:block>
+<head>
+	<link rel="stylesheet" type="text/css" th:href="@{/css/login.css}" />
+	<title>Login</title>
+</head>
+
+<body>
+	<main class="form-signin full-heig-size w-50 m-auto">
+		<form th:action="@{/login}" method="post">
+			<i class="bi bi-cloud-haze2-fill icone"></i>
+			<h1 class="h3 mb-3 fw-normal">Automação - Login</h1>
+			<div class="alert alert-warning" role="alert" th:if="${param.error}">Usuário ou Senha incorreta.</div>
+			<div class="alert alert-warning" role="alert" th:if="${param.logout}">Você foi desconectado.</div>
+			<div class="form-floating">
+				<input type="text" name="username" class="form-control"
+					id="floatingInput" placeholder="Usuário"> <label
+					for="floatingInput">Usuário</label>
+			</div>
+			<div class="form-floating">
+				<input type="password" name="password" class="form-control"
+					id="floatingPassword" placeholder="Senha"> <label
+					for="floatingPassword">Senha</label>
+			</div>
+
+			<button class="btn btn-primary w-100 py-2 mt-4" type="submit">Entrar</button>
+		</form>
+	</main>
+	<footer class="w-100 text-center">
+		<p class="text-body-primary">&copy; S/A USINA CORURIPE AÇÚCAR E
+			ÁLCOOL 2017–2023</p>
+	</footer>
+</body>
+
+</html>

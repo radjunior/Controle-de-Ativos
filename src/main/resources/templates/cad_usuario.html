@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<th:block th:replace="~{./fragments :: cabecalho}"></th:block>
+
+<head>
+    <title>Cadastro de Usuários</title>
+</head>
+
+<body>
+    <nav th:replace="~{./fragments :: navbar}"></nav>
+    <div th:replace="~{./fragments :: offcanvas}"></div>
+    <th:block th:replace="~{./fragments :: msgReturn}"></th:block>
+    
+    <h1 class="text-center mb-4 mt-4">Cadastro de Usuários</h1>
+	
+    <main class="form-control mt-4 m10-w90">
+        <form class="row g-3 needs-validation" th:action="@{/cad/usuario/salvar}" method="post" novalidate>
+            <div class="col-md-6">
+                <label for="validationCustom01" class="form-label">Nome Completo</label>
+                <input type="text" class="form-control" name="nomeCompleto" id="validationCustom01" required>
+                <div class="valid-feedback">Ok!</div>
+                <div class="invalid-feedback">Campo Obrigatório</div>
+            </div>
+            <div class="col-md-6">
+                <label for="validationCustom04" class="form-label">Perfil</label>
+                <select class="form-select" name="perfil" aria-label="Default select example" id="validationCustom04" required>
+					<option value="ROLE_USER">Usuário</option>
+					<option value="ROLE_ADMIN">Administrador</option>
+				</select>
+            </div>
+            <div class="col-md-4">
+                <label for="validationCustom02" class="form-label">Usuário</label>
+                <input type="text" class="form-control" name="usuario" id="validationCustom02" required>
+                <div class="valid-feedback">Ok!</div>
+                <div class="invalid-feedback">Campo Obrigatório</div>
+            </div>
+            <div class="col-md-4">
+                <label for="validationCustom03" class="form-label">Senha</label>
+                <input type="password" class="form-control" name="senha" id="validationCustom03" required>
+                <div class="valid-feedback">Ok!</div>
+                <div class="invalid-feedback">Campo Obrigatório</div>
+            </div>
+            <div class="col-md-4">
+                <label for="validationCustom04" class="form-label">Confirme a Senha</label>	
+                <input type="password" class="form-control" name="confirmSenha" id="validationCustom04" required>
+                <div class="valid-feedback">Ok!</div>
+                <div class="invalid-feedback">Campo Obrigatório</div>
+            </div>
+            <div class="col-12">
+                <button class="btn btn-outline-success" type="submit">Salvar</button>
+            </div>
+        </form>
+    </main>
+    
+    <section class="form-control m10-w90 tabela">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Nome Completo</th>
+                    <th>Login</th>
+                    <th style="width: 100px;">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="var: ${usuarios}">
+                    <td th:text="${var.nomeCompleto}"></td>
+                    <td th:text="${var.loginUsuario}"></td>
+                    <td style="display: flex;gap: 10px;">
+                        <button class="btn btn-info" onclick="editarUsuario(this)"><i class="bi bi-gear"></i></button>
+                        <form th:action="@{/cad/usuario/deletar}" method="post">
+                            <input type="hidden" name="id" th:value="${var.loginUsuario}">
+                            <button type="submit" class="btn btn-danger"><i class="bi bi-trash3"></i></button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </section>
+    
+    <th:block th:replace="~{./fragments :: scriptJs}"></th:block>
+	<script type="text/javascript">
+		function editarUsuario(btn) {
+			var row = btn.parentNode.parentNode;
+			
+			var id 				= row.cells[0].textContent;
+			var nomeCompleto 	= row.cells[1].textContent;
+			var usuario 		= row.cells[2].textContent;
+			
+			document.querySelector('input[name="id"]').value = id;
+			document.querySelector('input[name="nomeCompleto"]').value = nomeCompleto;
+			document.querySelector('input[name="usuario"]').value = usuario;
+		}
+	</script>
+</body>
+</html>
