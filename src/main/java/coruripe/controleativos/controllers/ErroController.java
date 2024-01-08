@@ -10,7 +10,6 @@ public class ErroController implements ErrorController {
 
 	@GetMapping("/error")
 	public ModelAndView handleError() {
-		System.out.println("Error Geral");
 		return new ModelAndView("error");
 	}
 	

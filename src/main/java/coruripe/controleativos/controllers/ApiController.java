@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import coruripe.controleativos.models.Equipamento;
@@ -34,25 +35,20 @@ public class ApiController {
 
 	@GetMapping("/proposta/consultar")
 	public ResponseEntity<List<PropostaRelacionadaRecord>> consultarProposta(@RequestParam Integer idManutencao) {
-		List<PropostaRelacionadaRecord> propostas = new ArrayList<>(); 
+		List<PropostaRelacionadaRecord> propostas = new ArrayList<>();
 		for (Object[] linha : this.cadastroService.buscarPropostasPorEquipamentosPorManutencao(idManutencao)) {
-			propostas.add(new PropostaRelacionadaRecord(
-					Integer.parseInt(linha[0].toString()), 
-					Integer.parseInt(linha[1].toString()), 
-					Integer.parseInt(linha[2].toString()), 
-					linha[3] == null ? "" : linha[3].toString(), 
-					Integer.parseInt(linha[4] == null ? "0" : linha[4].toString()), 
-					linha[5] == null ? "": linha[5].toString(), 
-					linha[6] == null ? "": linha[6].toString(),
-					Integer.parseInt(linha[7] == null ? "0" : linha[7].toString())
-				)
-			);
+			propostas.add(new PropostaRelacionadaRecord(Integer.parseInt(linha[0].toString()),
+					Integer.parseInt(linha[1].toString()), Integer.parseInt(linha[2].toString()),
+					linha[3] == null ? "" : linha[3].toString(),
+					Integer.parseInt(linha[4] == null ? "0" : linha[4].toString()),
+					linha[5] == null ? "" : linha[5].toString(), linha[6] == null ? "" : linha[6].toString(),
+					Integer.parseInt(linha[7] == null ? "0" : linha[7].toString())));
 		}
 		return ResponseEntity.status(HttpStatus.OK).body(propostas);
 	}
 
 	@PostMapping("/proposta/salvar")
-	public ResponseEntity<String> salvarProposta(@RequestBody PropostaManutencaoRecord pmRecord) {
+	public @ResponseBody ResponseEntity<String> salvarProposta(@RequestBody PropostaManutencaoRecord pmRecord) {
 		PropostaManutencao pm = new PropostaManutencao(this.cadastroService.buscarManutencaoId(pmRecord.idManutencao()),
 				this.cadastroService.buscarEquipamentoId(pmRecord.numeroSerieEquipamento()),
 				this.cadastroService.buscarEmpresaId(pmRecord.idEmpresa()), pmRecord);
@@ -67,27 +63,30 @@ public class ApiController {
 
 	@GetMapping("/rc/consultar")
 	public ResponseEntity<List<RequisicaoCompra>> consultarRcs(@RequestParam Integer idManutencao) {
-		return ResponseEntity.status(HttpStatus.OK).body(this.cadastroService.buscarTodasRCsPorManutencao(idManutencao));
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(this.cadastroService.buscarTodasRCsPorManutencao(idManutencao));
 	}
 
 	@PostMapping("/rc/salvar")
-	public ResponseEntity<String> salvarRcs(@RequestBody RequisicaoCompraRecord rcRecord) {
+	public @ResponseBody ResponseEntity<String> salvarRcs(@RequestBody RequisicaoCompraRecord rcRecord) {
 		return ResponseEntity.status(HttpStatus.OK).body(this.cadastroService.salvarRc(rcRecord));
 	}
 
 	@PostMapping("/rc/deletar")
-	public ResponseEntity<String> deletarRcs(@RequestBody RequisicaoCompraRecord rcRecord) {
+	public @ResponseBody ResponseEntity<String> deletarRcs(@RequestBody RequisicaoCompraRecord rcRecord) {
 		return ResponseEntity.status(HttpStatus.OK).body(this.cadastroService.excluirRC(rcRecord));
 	}
 
 	@PostMapping("/equipamentos/salvar")
-	public ResponseEntity<List<EquipamentosManutencao>> salvarEquipamentos(@RequestBody EquipamentoManutencaoRecord emRecord) {
-		return ResponseEntity.status(HttpStatus.OK).body(this.cadastroService.salvarEquipamentoManutencao(emRecord));
+	public @ResponseBody ResponseEntity<String> salvarEquipamentos(@RequestBody EquipamentoManutencaoRecord emRecord) {
+		this.cadastroService.salvarEquipamentoManutencao(emRecord);
+		return ResponseEntity.status(HttpStatus.OK).body("Sucesso");
 	}
 
 	@GetMapping("/equipamentos/consultar")
 	public ResponseEntity<List<EquipamentosManutencao>> consultarEquipamentos(@RequestParam Integer idManutencao) {
-		return ResponseEntity.status(HttpStatus.OK).body(this.cadastroService.buscarEquipamentosPorManutencao(idManutencao));
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(this.cadastroService.buscarEquipamentosPorManutencao(idManutencao));
 	}
 
 	@GetMapping("/equipamentos/consultar-equipamento")
@@ -98,8 +97,7 @@ public class ApiController {
 
 	@GetMapping("/equipamentos/deletar")
 	public ResponseEntity<String> deletarEquipamentos(@RequestParam Integer id) {
-		System.out.println(id);
-		//this.cadastroService.deletarEquipamentosPorManutencao(id);
+		this.cadastroService.deletarEquipamentosPorManutencao(id);
 		return ResponseEntity.status(HttpStatus.OK).body("sucesso");
 	}
 

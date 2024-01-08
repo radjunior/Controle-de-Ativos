@@ -76,7 +76,7 @@ function salvarProposta() {
 			document.querySelector("input[name='valor']").value = "";
 		},
 		error: function(error) {
-			console.log('Erro na requisição:', error);
+			console.error('Erro na requisição:', error);
 		}
 	});
 }
@@ -140,7 +140,7 @@ function excluirProposta(button) {
 			popularTabelaProposta();
 		},
 		error: function(error) {
-			console.log('Erro na requisição:', error);
+			console.error('Erro na requisição:', error);
 		}
 	});
 }

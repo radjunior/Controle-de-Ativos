@@ -87,11 +87,6 @@ public class Usuario {
 		return false;
 	}
 
-	public Usuario getSaveSession() {
-		this.loginSenha = null;
-		return this;
-	}
-
 	@Override
 	public String toString() {
 		return "Usuario [loginUsuario=" + loginUsuario + ", loginSenha=" + loginSenha + ", nomeCompleto=" + nomeCompleto

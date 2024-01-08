@@ -16,7 +16,9 @@ function buscarEquipamento() {
 		success: function(data) {
 			inserirLinhasTabelaEquipamento(data);
 		},
-		error: function(error) { console.log('Erro na requisição:', error); }
+		error: function(error) { 
+			console.error('Erro na requisição:', error); 
+		}
 	});
 }
 
@@ -41,22 +43,22 @@ function salvarRelacionamentoEquipamentoManutencao(btn) {
 	let lblId = document.querySelector('#modalAddEquipamentosLabel').textContent;
 	lblId = lblId.split("-")[0].replace("[", "").replace("]", "").replace("Manutenção: ", "").trim();
 
-	const url = `${base_url}/equipamentos/salvar`;
-
 	const data = {
 		idManutencao: Number(lblId),
 		numeroSerieEquipamento: Number(btn.parentNode.parentNode.cells[0].textContent),
-	};
+	}
 
 	$.ajax({
-		url: url,
+		url: `${base_url}/equipamentos/salvar`,
 		type: 'POST',
 		contentType: 'application/json',
 		data: JSON.stringify(data),
 		success: function() {
 			buscarEquipamentosPorManutencao();
 		},
-		error: function(error) { console.log('Erro na requisição:', error); }
+		error: function(error) { 
+			console.error('Erro na requisição:', error); 
+		}
 	});
 }
 
@@ -117,7 +119,7 @@ function excluirRelacionamentoEquipamentoManutencao(button) {
 			buscarEquipamentosPorManutencao();
 		},
 		error: function(error) {
-			console.log('Erro na requisição:', error);
+			console.error('Erro na requisição:', error);
 		}
 	});
 }

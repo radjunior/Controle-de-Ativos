@@ -1,8 +1,8 @@
-/* Utilizando o Tomcat */
-//const base_url = "https://autoweb.usinacoruripe.com.br/automacaocfl/api"
+var base_url = location.href.substring(0, location.href.lastIndexOf("/"));
+let arr = base_url.split("/");
 
-/* Executando diretamente */
-//const base_url = "https://ntbitu270.usinacoruripe.com.br/api";
-
-/* Localhost */
-const base_url = "http://localhost/api";
+if (arr[3] === 'controle-ativos') {
+	base_url = `${arr[0]}//${arr[2]}/${arr[3]}/api`
+} else {
+	base_url = `${arr[0]}//${arr[2]}/api`
+}

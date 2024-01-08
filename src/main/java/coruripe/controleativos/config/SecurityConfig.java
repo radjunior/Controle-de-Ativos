@@ -4,6 +4,7 @@ import javax.sql.DataSource;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -26,11 +27,14 @@ public class SecurityConfig {
 		return new JdbcUserDetailsManager(dataSource);
 	}
 	
+	@SuppressWarnings("removal")
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		http.authorizeHttpRequests((authHttp) -> authHttp
+		http.csrf().disable()
+			.authorizeHttpRequests(authHttp -> authHttp
 				.requestMatchers("/script/imports.js").permitAll()
 				.requestMatchers("/css/login.css").permitAll()
+				.requestMatchers(HttpMethod.POST, "/api/**").permitAll()
 				.requestMatchers("/cad/usuario/**").hasAnyAuthority("ROLE_ADMIN")
 				.anyRequest().authenticated()
 			)
